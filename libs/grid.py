@@ -21,25 +21,24 @@ class Grid:
         # tableau d'indice [i][j] correspondant aux coordonnées de la case avec sa valeur [(1 coloriée, 0 sinon), zone de la case]
         self.cells = [[[Grid.CELL_NOT_COLORED, None] for _ in range(self.n)] for _ in range(self.n)]
 
+    def getGrid(self):
+        return self.cells
+
+    def getCellValueZone(self, i: int, j: int):
+        if not (isinstance(i, int) and isinstance(j, int)):
+            raise TypeError("Les coordonnées d'une case doivent être des entiers")
+        if i > self.n or i < Grid.GRID_MIN_SIZE or j > self.n or j < Grid.GRID_MIN_SIZE:
+            raise AssertionError("Les coordonnées ne sont pas dans la grille")
+        return self.cells[i][j][1]
+
     def setCellValueZone(self, i: int, j: int, k: int):
         if not (isinstance(i, int) and isinstance(j, int) and isinstance(k, int)):
             raise TypeError("Les coordonnées d'une case doivent être des entiers")
         if i > self.n or i < Grid.GRID_MIN_SIZE or j > self.n or j < Grid.GRID_MIN_SIZE or k > self.zone or k < Grid.ZONE_MIN_NUMBER:
             raise AssertionError("Les coordonnées ne sont pas dans la grille")
-        values = self.cells[i][j]
-        values[1] = k
+        self.cells[i][j][1] = k
 
-    def setCellValueColor(self, i: int, j: int, color: int):
-        if not (isinstance(i, int) and isinstance(j, int) and isinstance(color, int)):
-            raise TypeError("Les paramètres pour définir une case coloriée doivent être des entiers")
-        if i > self.n or i < Grid.GRID_MIN_SIZE or j > self.n or j < Grid.GRID_MIN_SIZE:
-            raise AssertionError("Les coordonnées ne sont pas dans la grille")
-        if color != Grid.CELL_COLORED and color != Grid.CELL_NOT_COLORED:
-            raise ValueError("Le paramètre de la couleur doit valoir 0 (non coloriée) ou 1 (coloriée)")
-        values = self.cells[i][j]
-        values[0] = color
-
-    def getCellValue(self, i: int, j: int, k: int):
+    def getCellValueColor(self, i: int, j: int, k: int):
         if not (isinstance(i, int) and isinstance(j, int) and isinstance(k, int)):
             raise TypeError("Les coordonnées d'une case doivent être des entiers")
         if i > self.n or i < Grid.GRID_MIN_SIZE or j > self.n or j < Grid.GRID_MIN_SIZE or k > self.zone or k < Grid.ZONE_MIN_NUMBER:
@@ -50,5 +49,11 @@ class Grid:
         else:
             raise ValueError(f"La case de coordonnées ({i}, {j}, {k}) n'existe pas")
 
-    def getGrid(self):
-        return self.cells
+    def setCellValueColor(self, i: int, j: int, color: int):
+        if not (isinstance(i, int) and isinstance(j, int) and isinstance(color, int)):
+            raise TypeError("Les paramètres pour définir une case coloriée doivent être des entiers")
+        if i > self.n or i < Grid.GRID_MIN_SIZE or j > self.n or j < Grid.GRID_MIN_SIZE:
+            raise AssertionError("Les coordonnées ne sont pas dans la grille")
+        if color != Grid.CELL_COLORED and color != Grid.CELL_NOT_COLORED:
+            raise ValueError("Le paramètre de la couleur doit valoir 0 (non coloriée) ou 1 (coloriée)")
+        self.cells[i][j][0] = color
