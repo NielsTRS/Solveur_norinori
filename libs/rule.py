@@ -67,3 +67,17 @@ class Rule:
 
     def getNumberVar(self):
         return self.nbVar
+
+    def getNumberClauses(self):
+        return len(self.clauses)
+
+    def generateDimacs(self, filename):
+        f = open(filename, "w")
+        f.write(f"p cnf {self.getNumberVar()} {self.getNumberClauses()} \n")
+        text = ""
+        for clause in self.getClauses():
+            for name in clause:
+                text += str(name) + " "
+            text += "0 \n"
+        f.write(text)
+        f.close()

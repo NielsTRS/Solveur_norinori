@@ -13,4 +13,5 @@ print(grille.getGrid())
 regle.generateClauses()
 print(regle.getClauses())
 print(regle.getNumberVar())
-
+print(regle.getNumberClauses())
+regle.generateDimacs("dimacs.txt")
