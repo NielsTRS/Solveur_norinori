@@ -80,7 +80,7 @@ class Grid:
         self.cells[i - 1][j - 1][1] = k
         return self
 
-    def getCellValueColor(self, i: int, j: int, k: int):
+    def getCellValueColor(self, i: int, j: int):
         """
         Permet de récupérer la couleur de la case (i, j) appartenant à la zone k
         :param i: première coordonnée
@@ -92,15 +92,12 @@ class Grid:
         :return: couleur de la case
         :rtype: int
         """
-        if not (isinstance(i, int) and isinstance(j, int) and isinstance(k, int)):
+        if not (isinstance(i, int) and isinstance(j, int)):
             raise TypeError("Les coordonnées d'une case doivent être des entiers")
-        if i > self.n or i <= Grid.GRID_MIN_INDEX or j > self.n or j <= Grid.GRID_MIN_INDEX or k > self.zone or k < Grid.ZONE_MIN_NUMBER:
+        if i > self.n or i <= Grid.GRID_MIN_INDEX or j > self.n or j <= Grid.GRID_MIN_INDEX:
             raise AssertionError("Les coordonnées ne sont pas dans la grille")
         values = self.cells[i - 1][j - 1]
-        if values[1] == k:
-            return values[0]
-        else:
-            raise ValueError(f"La case de coordonnées ({i}, {j}, {k}) n'existe pas")
+        return values[0]
 
     def setCellValueColor(self, i: int, j: int, color: int):
         """

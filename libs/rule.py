@@ -1,11 +1,12 @@
 # coding : utf-8
 
+import libs.grid as grid
+
 class Rule:
     def __init__(self, n: int):
         if not (isinstance(n, int)):
             raise TypeError("n doit être un entier")
         self.clauses = []
-        self.nbVar = n * n
         self.n = n
 
     def generateClauses(self):
@@ -65,11 +66,12 @@ class Rule:
     def getClauses(self):
         return self.clauses
 
+    # A modifier pour compter le vrai nombre de variables restantes après filtrage
     def getNumberVar(self):
-        return self.nbVar
+        return self.n * self.n
 
     def getNumberClauses(self):
-        return len(self.clauses)
+        return len(self.getClauses())
 
     def generateDimacs(self, filename):
         f = open(filename, "w")
@@ -81,3 +83,24 @@ class Rule:
             text += "0 \n"
         f.write(text)
         f.close()
+
+    # A modifier, il y a des erreurs
+    def filterClauses(self, grille: grid):
+        for clause in self.getClauses():
+            for name in clause:
+                if not str(name)[0] == "-":
+                    i = int(str(name)[0])
+                    j = int(str(name)[1])
+                    value = grille.getCellValueColor(i, j)
+                    if value == grille.CELL_COLORED:
+                        # remove clause
+                        del self.getClauses()[i-1]
+                else:
+                    i = int(str(name)[1])
+                    j = int(str(name)[2])
+                    value = grille.getCellValueColor(i, j)
+                    if value == grille.CELL_COLORED:
+                        # remove name
+                        del self.getClauses()[i - 1][j - 1]
+                self.clauses = self.getClauses()
+        return self
