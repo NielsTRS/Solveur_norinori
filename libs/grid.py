@@ -36,6 +36,14 @@ class Grid:
         """
         return self.cells
 
+    def getGridSize(self):
+        """
+        Renvoie la taille de la grille
+        :return: taille
+        :rtype: int
+        """
+        return self.n
+
     def getCellValueZone(self, i: int, j: int):
         """
         Renvoie dans quelle zone est la cellule de coordonnées (i, j)
