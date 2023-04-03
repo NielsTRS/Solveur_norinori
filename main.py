@@ -9,9 +9,11 @@ zone = 1
 grille = grid.Grid(n, zone)
 regle = rule.Rule(n)
 
-grille.setCellValueColor(2, 2, 1)
+print(grille.getGrid())
 
-regle.generateClauses()
+grille.setCellValueColor(1, 1, 1)
+
+regle.generateClauses(grille)
 print(regle.getClauses())
 
 regle.filterClauses(grille)

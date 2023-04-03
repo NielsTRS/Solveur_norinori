@@ -26,8 +26,37 @@ class Grid:
         self.n = n  # taille de la grille
         self.zone = zone  # nombre de zones
 
-        # tableau d'indice [i][j] correspondant aux coordonnées de la case (i+1, j+1) avec les valeurs : [(1 coloriée, 0 sinon), zone de la case]
-        self.cells = [[[Grid.CELL_NOT_COLORED, None] for _ in range(self.n)] for _ in range(self.n)]
+        # tableau d'indice [i][j] correspondant aux coordonnées de la case (i+1, j+1) avec les valeurs : [(1 coloriée, 0 sinon), zone de la case, id]
+        self.cells = []
+        self.__generateCells()
+
+    def __generateCells(self):
+        id = 1
+        for i in range(self.n):
+            subs = []
+            for j in range(self.n):
+                subs.append([Grid.CELL_NOT_COLORED, None, id])
+                id += 1
+            self.cells.append(subs)
+
+    def getIdCell(self, i: int, j: int):
+        if not (isinstance(i, int) and isinstance(j, int)):
+            raise TypeError("Les coordonnées d'une case doivent être des entiers")
+        if i > self.n or i <= Grid.GRID_MIN_INDEX or j > self.n or j <= Grid.GRID_MIN_INDEX:
+            raise AssertionError("Les coordonnées ne sont pas dans la grille")
+        return self.cells[i - 1][j - 1][2]
+
+    def getCellIJById(self, id: int):
+        if not (isinstance(id, int)):
+            raise TypeError("L'identifiant d'une case doit être un entier")
+        if id > (self.n * self.n) or id <= 0:
+            raise AssertionError("Mauvaise valeur de l'identifiant")
+        for i in range(self.n):
+            for j in range(self.n):
+                values = self.cells[i][j]
+                if values[2] == id:
+                    return [i + 1, j + 1]
+        return None
 
     def getGrid(self):
         """
