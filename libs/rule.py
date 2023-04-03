@@ -126,10 +126,14 @@ class Rule:
                 i = cell[0]
                 j = cell[1]
                 value = grille.getCellValueColor(i, j)
-                if value != grille.CELL_COLORED:
-                    filtered_clause.append(name)
+                if not str(name)[0] == "-":
+                    if value != grille.CELL_COLORED:
+                        filtered_clause.append(name)
+                    else:
+                        add_clause = False
                 else:
-                    add_clause = False
+                    if value != grille.CELL_COLORED:
+                        filtered_clause.append(name)
             if add_clause:
                 filtered_clauses.append(filtered_clause)
 
