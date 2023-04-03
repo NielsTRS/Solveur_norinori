@@ -109,9 +109,10 @@ class Rule:
         f.write(f"p cnf {self.getNumberVar()} {self.getNumberClauses()} \n")
         text = ""
         for clause in self.getClauses():
-            for name in clause:
-                text += str(name) + " "
-            text += "0 \n"
+            if(len(clause) > 0):
+                for name in clause:
+                    text += str(name) + " "
+                text += "0 \n"
         f.write(text)
         f.close()
 
