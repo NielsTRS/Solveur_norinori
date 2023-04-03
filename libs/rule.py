@@ -2,6 +2,7 @@
 
 import libs.grid as grid
 
+
 class Rule:
     def __init__(self, n: int):
         if not (isinstance(n, int)):
@@ -66,9 +67,8 @@ class Rule:
     def getClauses(self):
         return self.clauses
 
-    # A modifier pour compter le vrai nombre de variables restantes après filtrage
     def getNumberVar(self):
-        return self.n * self.n
+        return len(set([abs(name) for clause in self.getClauses() for name in clause]))  # transforme le tableau en 1D
 
     def getNumberClauses(self):
         return len(self.getClauses())
@@ -84,23 +84,29 @@ class Rule:
         f.write(text)
         f.close()
 
-    # A modifier, il y a des erreurs
     def filterClauses(self, grille: grid):
-        for clause in self.getClauses():
+        clauses = self.getClauses()
+        filtered_clauses = []
+        for clause in clauses:
+            filtered_clause = []
+            add_clause = True
             for name in clause:
                 if not str(name)[0] == "-":
                     i = int(str(name)[0])
                     j = int(str(name)[1])
                     value = grille.getCellValueColor(i, j)
-                    if value == grille.CELL_COLORED:
-                        # remove clause
-                        del self.getClauses()[i-1]
+                    if value != grille.CELL_COLORED:
+                        filtered_clause.append(name)
+                    else:
+                        add_clause = False
                 else:
                     i = int(str(name)[1])
                     j = int(str(name)[2])
                     value = grille.getCellValueColor(i, j)
-                    if value == grille.CELL_COLORED:
-                        # remove name
-                        del self.getClauses()[i - 1][j - 1]
-                self.clauses = self.getClauses()
+                    if value != grille.CELL_COLORED:
+                        filtered_clause.append(name)
+            if add_clause:
+                filtered_clauses.append(filtered_clause)
+
+        self.clauses = filtered_clauses
         return self

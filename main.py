@@ -9,11 +9,12 @@ zone = 1
 grille = grid.Grid(n, zone)
 regle = rule.Rule(n)
 
-grille.setCellValueColor(1, 1, 1)
+grille.setCellValueColor(2, 2, 1)
 
-print(grille.getGrid())
 regle.generateClauses()
 print(regle.getClauses())
+
+regle.filterClauses(grille)
 print(regle.getClauses())
 
 regle.generateDimacs("dimacs.txt")
