@@ -109,7 +109,7 @@ class Rule:
         f.write(f"p cnf {self.getNumberVar()} {self.getNumberClauses()} \n")
         text = ""
         for clause in self.getClauses():
-            if(len(clause) > 0):
+            if len(clause) > 0:
                 for name in clause:
                     text += str(name) + " "
                 text += "0 \n"
@@ -124,16 +124,15 @@ class Rule:
             add_clause = True
             for name in clause:
                 cell = grille.getCellIJById(abs(name))
-                i = cell[0]
-                j = cell[1]
-                value = grille.getCellValueColor(i, j)
+                color = grille.getCellValueColor(cell[0], cell[1])
                 if not str(name)[0] == "-":
-                    if value != grille.CELL_COLORED:
+                    if color != grille.CELL_COLORED:
                         filtered_clause.append(name)
                     else:
                         add_clause = False
+                        break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
                 else:
-                    if value != grille.CELL_COLORED:
+                    if color != grille.CELL_COLORED:
                         filtered_clause.append(name)
             if add_clause:
                 filtered_clauses.append(filtered_clause)

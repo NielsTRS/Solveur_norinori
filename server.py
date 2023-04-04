@@ -4,9 +4,9 @@ import libs.rule as rule
 import libs.grid as grid
 from pysat.solvers import Lingeling
 from pysat.formula import CNF
+
 app = Flask(__name__)
 CORS(app)
-
 
 
 @app.route('/generateGrid', methods=['POST'])
@@ -22,6 +22,7 @@ def generateGrid():
     }
     return jsonify(cells)
 
+
 @app.route('/solveGrid', methods=['POST'])
 def solveGrid():
     data = request.get_json()
@@ -31,7 +32,7 @@ def solveGrid():
     regle = rule.Rule(n)
     cellsToColor = data["cellsToColor"]
     for cell in cellsToColor:
-        grille.setCellValueColor(cell[0]+1, cell[1]+1, 1)
+        grille.setCellValueColor(cell[0] + 1, cell[1] + 1, 1)
     regle.generateClauses(grille)
     regle.filterClauses(grille)
     regle.generateDimacs("dimacs.cnf")
@@ -48,7 +49,6 @@ def solveGrid():
         return jsonify({'solution': cellsToUpdate})
     else:
         return jsonify({'error': True})
-
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ import libs.grid as grid
 from pysat.solvers import Glucose3
 from pysat.formula import CNF
 
-n = 3
+n = 2
 zone = 1
 name = "dimacs.cnf"
 
@@ -15,7 +15,6 @@ regle = rule.Rule(n)
 print(grille.getGrid())
 
 grille.setCellValueColor(1, 1, 1)
-grille.setCellValueColor(3, 3, 1)
 
 regle.generateClauses(grille)
 print(regle.getClauses())
@@ -41,8 +40,8 @@ if solution:
     model = solver.get_model()
     print('Satisfiable')
     print('Solution:', model)
-    for id in model:
-        if id > 0:
-            print(f"Il faut colorier la case de coordonnées : {grille.getCellIJById(id)}")
+    for idCell in model:
+        if idCell > 0:
+            print(f"Il faut colorier la case de coordonnées : {grille.getCellIJById(idCell)}")
 else:
     print('Non satisfiable')
