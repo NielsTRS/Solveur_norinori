@@ -1,5 +1,7 @@
 # coding : utf-8
 
+import itertools
+
 import libs.grid as grid
 
 
@@ -12,134 +14,78 @@ class Rule:
         self.gridLib = gridLib
 
     def __generateNeighborClauses(self):
+        def textClause(x, y, positive, *args):
+            tempClauses = []
+            prefix = "" if positive else "-"
+            tempClauses.append(int(f"{prefix}{self.gridLib.getIdCell(x, y)}"))
+            for arg in args:
+                prefix = "" if arg[2] else "-"
+                tempClauses.append(int(f"{prefix}{self.gridLib.getIdCell(arg[0], arg[1])}"))
+            return tempClauses
+
         for i in range(1, self.n + 1):
             for j in range(1, self.n + 1):
                 if i == 1 and j == 1:  # case en haut a gauche x_{i-1,j} et x_{i,j-1} n'existent pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, True), (i + 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
 
                 elif i == 1 and j == self.n:  # case en haut à droite x_{i-1,j} et x_{i,j+1} n'existent pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i + 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
 
                 elif i == self.n and j == 1:  # case en bas a gauche x_{i+1,j} et x_{i,j-1} n'existent pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, True), (i - 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
 
                 elif i == self.n and j == self.n:  # case en bas à droite x_{i+1,j} et x_{i,j+1} n'existent pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i - 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
 
                 elif i == 1:  # cases sur la premiere ligne x_{i-1,j} n'existe pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"{self.gridLib.getIdCell(i, j + 1)}"), int(f"{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j + 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i + 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
 
                 elif i == self.n:  # cases sur la derniere ligne x_{i+1,j} n'existe pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"{self.gridLib.getIdCell(i, j + 1)}"), int(f"{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j + 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i - 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
 
                 elif j == 1:  # cases sur la premiere colonne x_{i, j_1} n'existe pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"{self.gridLib.getIdCell(i, j + 1)}"), int(f"{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j + 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, True), (i, j + 1, True), (i - 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i, j + 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i - 1, j, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
 
                 elif j == self.n:  # cases sur la dernière colonne x_{i, j+1} n'existe pas
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"{self.gridLib.getIdCell(i, j - 1)}"), int(f"{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j - 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i + 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i - 1, j)}")])
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, True), (i, j - 1, True), (i - 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i, j - 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i - 1, j, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
 
                 else:  # toutes les autres cases
+                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i, j - 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i, j + 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i + 1, j, False)))
                     self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i - 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j - 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i - 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j + 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i - 1, j)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"{self.gridLib.getIdCell(i - 1, j)}"),
-                         int(f"{self.gridLib.getIdCell(i, j - 1)}"), int(f"{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i, j + 1)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j - 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
-                    self.clauses.append(
-                        [int(f"-{self.gridLib.getIdCell(i, j)}"), int(f"-{self.gridLib.getIdCell(i, j + 1)}"),
-                         int(f"-{self.gridLib.getIdCell(i + 1, j)}")])
+                        textClause(i, j, False, (i - 1, j, True), (i, j - 1, True), (i, j + 1, True), (i + 1, j, True)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
+                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
+
         return self
 
     def __generateZoneClauses(self):
-        for k in range(1, self.gridLib.getZoneNumber() + 1):
-            cases = []
-            for i in range(1, self.gridLib.getGridSize() + 1):
-                for j in range(1, self.gridLib.getGridSize() + 1):
-                    if self.gridLib.getCellValueZone(i, j) == k:
-                        cases.append(self.gridLib.getIdCell(i, j))
-            for case1 in cases:
-                for case2 in cases:
-                    if case1 != case2:
-                        for case3 in cases:
-                            if case3 != case1 and case3 != case2:
-                                self.clauses.append([int(f"-{case1}"), int(f"-{case2}"), int(f"-{case3}")])
+        gridSize = self.gridLib.getGridSize()
+        gridZoneNumber = self.gridLib.getZoneNumber()
+        for k in range(1, gridZoneNumber + 1):
+            cases = [self.gridLib.getIdCell(i, j) for i in range(1, gridSize + 1) for j in
+                     range(1, gridSize + 1) if self.gridLib.getCellValueZone(i, j) == k]
+            for case1, case2, case3 in itertools.combinations(cases,
+                                                              3):  # permet d'avoir toutes les combinaisons possibles en enlevant les doublons
+                self.clauses.append([int(f"-{case1}"), int(f"-{case2}"), int(f"-{case3}")])
 
     def __filterClauses(self):
         clauses = self.getClauses()
