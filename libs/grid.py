@@ -31,12 +31,12 @@ class Grid:
         self.__generateCells()
 
     def __generateCells(self):
-        id = 1
+        idCell = 1
         for i in range(self.n):
             subs = []
             for j in range(self.n):
-                subs.append([Grid.CELL_NOT_COLORED, None, id])
-                id += 1
+                subs.append([Grid.CELL_NOT_COLORED, None, idCell])
+                idCell += 1
             self.cells.append(subs)
 
     def getIdCell(self, i: int, j: int):
@@ -46,15 +46,14 @@ class Grid:
             raise AssertionError("Les coordonnées ne sont pas dans la grille")
         return self.cells[i - 1][j - 1][2]
 
-    def getCellIJById(self, id: int):
-        if not (isinstance(id, int)):
+    def getCellIJById(self, idCell: int):
+        if not (isinstance(idCell, int)):
             raise TypeError("L'identifiant d'une case doit être un entier")
-        if id > (self.n * self.n) or id <= 0:
+        if idCell > (self.n * self.n) or idCell <= 0:
             raise AssertionError("Mauvaise valeur de l'identifiant")
         for i in range(self.n):
             for j in range(self.n):
-                values = self.cells[i][j]
-                if values[2] == id:
+                if self.cells[i][j][2] == idCell:
                     return [i + 1, j + 1]
         return None
 
