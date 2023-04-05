@@ -10,7 +10,7 @@ class Rule:
         self.clauses = []
         self.n = n
 
-    def generateClauses(self, grille: grid):
+    def generateNeighborClauses(self, grille: grid):
         for i in range(1, self.n + 1):
             for j in range(1, self.n + 1):
                 if i == 1 and j == 1:  # case en haut a gauche x_{i-1,j} et x_{i,j-1} n'existent pas
@@ -94,6 +94,20 @@ class Rule:
                     self.clauses.append([int(f"-{grille.getIdCell(i, j)}"), int(f"-{grille.getIdCell(i, j + 1)}"),
                                          int(f"-{grille.getIdCell(i + 1, j)}")])
         return self
+
+    def generateZoneClauses(self, grille: grid):
+        for k in range(grille.getZoneNumber()):
+            cases = []
+            for i in range(1, grille.getGridSize() + 1):
+                for j in range(1, grille.getGridSize() + 1):
+                    if grille.getCellValueZone(i, j) == k:
+                        cases.append(grille.getIdCell(i, j))
+            for case1 in cases:
+                for case2 in cases:
+                    if case1 != case2:
+                        for case3 in cases:
+                            if case3 != case1 and case3 != case2:
+                                self.clauses.append([int(f"-{case1}"), int(f"-{case2}"), int(f"-{case3}")])
 
     def getClauses(self):
         return self.clauses

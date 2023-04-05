@@ -73,6 +73,9 @@ class Grid:
         """
         return self.n
 
+    def getZoneNumber(self):
+        return self.zone
+
     def getCellValueZone(self, i: int, j: int):
         """
         Renvoie dans quelle zone est la cellule de coordonnées (i, j)
