@@ -10,10 +10,9 @@ zone = 1
 name = "dimacs.cnf"
 
 grille = grid.Grid(n, zone)
-regle = rule.Rule(n)
+regle = rule.Rule(n, grille)
 
 grille.setCellValueColor(1, 1, 1)
-grille.setCellValueColor(2, 3, 1)
 
 grille.setCellValueZone(1, 1, 1)
 grille.setCellValueZone(1, 2, 1)
@@ -29,14 +28,7 @@ grille.setCellValueZone(3, 3, 1)
 
 print(grille.getGrid())
 
-regle.generateNeighborClauses(grille)
-
-# Avec cet exemple, il suffit de commenter / décommenter le code en dessous pour voir que la gestion de zone est bien prise en compte
-regle.generateZoneClauses(grille)
-
-print(regle.getClauses())
-
-regle.filterClauses(grille)
+regle.resolve()
 
 print(regle.getClauses())
 

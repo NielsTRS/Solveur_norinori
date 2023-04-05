@@ -35,7 +35,7 @@ class Grid:
         for i in range(self.n):
             subs = []
             for j in range(self.n):
-                subs.append([Grid.CELL_NOT_COLORED, None, idCell])
+                subs.append([Grid.CELL_NOT_COLORED, 1, idCell])
                 idCell += 1
             self.cells.append(subs)
 

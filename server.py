@@ -13,30 +13,28 @@ CORS(app)
 def generateGrid():
     data = request.get_json()
     n = int(data["gridSize"])
-    zone = 2
+    zone = 1
     grille = grid.Grid(n, zone)
-    regle = rule.Rule(n)
-    grilleGen = grille.getGrid()
     cells = {
-        'cells': grilleGen
+        'cells': grille.getGrid()
     }
     return jsonify(cells)
 
 
 @app.route('/solveGrid', methods=['POST'])
 def solveGrid():
+    name = "dimacs.cnf"
     data = request.get_json()
     n = int(data["gridSize"])
     zone = 1
     grille = grid.Grid(n, zone)
-    regle = rule.Rule(n)
+    regle = rule.Rule(n, grille)
     cellsToColor = data["cellsToColor"]
     for cell in cellsToColor:
         grille.setCellValueColor(cell[0] + 1, cell[1] + 1, 1)
-    regle.generateNeighborClauses(grille)
-    regle.filterClauses(grille)
-    regle.generateDimacs("dimacs.cnf")
-    cnf = CNF(from_file="dimacs.cnf")  # reading from file
+    regle.resolve()
+    regle.generateDimacs(name)
+    cnf = CNF(from_file=name)  # reading from file
     solver = Lingeling()
     solver.append_formula(cnf)
     solution = solver.solve()
