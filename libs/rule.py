@@ -96,7 +96,7 @@ class Rule:
         return self
 
     def generateZoneClauses(self, grille: grid):
-        for k in range(grille.getZoneNumber()):
+        for k in range(1, grille.getZoneNumber() + 1):
             cases = []
             for i in range(1, grille.getGridSize() + 1):
                 for j in range(1, grille.getGridSize() + 1):

@@ -5,36 +5,27 @@ import libs.grid as grid
 from pysat.solvers import Glucose3
 from pysat.formula import CNF
 
-n = 4
-zone = 3
+n = 3
+zone = 1
 name = "dimacs.cnf"
 
 grille = grid.Grid(n, zone)
 regle = rule.Rule(n)
 
 grille.setCellValueColor(1, 1, 1)
-grille.setCellValueColor(4, 1, 1)
-grille.setCellValueColor(2, 4, 1)
+grille.setCellValueColor(2, 3, 1)
 
 grille.setCellValueZone(1, 1, 1)
-grille.setCellValueZone(1, 2, 2)
-grille.setCellValueZone(1, 3, 2)
-grille.setCellValueZone(1, 4, 2)
+grille.setCellValueZone(1, 2, 1)
+grille.setCellValueZone(1, 3, 1)
 
 grille.setCellValueZone(2, 1, 1)
-grille.setCellValueZone(2, 2, 2)
-grille.setCellValueZone(2, 3, 2)
-grille.setCellValueZone(2, 4, 2)
+grille.setCellValueZone(2, 2, 1)
+grille.setCellValueZone(2, 3, 1)
 
 grille.setCellValueZone(3, 1, 1)
-grille.setCellValueZone(3, 2, 3)
-grille.setCellValueZone(3, 3, 3)
-grille.setCellValueZone(3, 4, 3)
-
-grille.setCellValueZone(4, 1, 3)
-grille.setCellValueZone(4, 2, 3)
-grille.setCellValueZone(4, 3, 3)
-grille.setCellValueZone(4, 4, 3)
+grille.setCellValueZone(3, 2, 1)
+grille.setCellValueZone(3, 3, 1)
 
 print(grille.getGrid())
 

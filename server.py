@@ -33,7 +33,7 @@ def solveGrid():
     cellsToColor = data["cellsToColor"]
     for cell in cellsToColor:
         grille.setCellValueColor(cell[0] + 1, cell[1] + 1, 1)
-    regle.generateClauses(grille)
+    regle.generateNeighborClauses(grille)
     regle.filterClauses(grille)
     regle.generateDimacs("dimacs.cnf")
     cnf = CNF(from_file="dimacs.cnf")  # reading from file
