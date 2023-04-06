@@ -102,7 +102,7 @@ class Rule:
                 for id in comb:
                     temp.append(int(f"-{id}"))
                 self.clauses.append(temp)
-            print(f"Clauses de la zone {k} : ")
+            print(f"Clauses de la zone 1 à {k} : ")
             print(self.getClauses())
 
     def __generateZoneClauses1(self):
