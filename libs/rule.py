@@ -81,8 +81,11 @@ class Rule:
         gridSize = self.gridLib.getGridSize()
         gridZoneNumber = self.gridLib.getZoneNumber()
         for k in range(1, gridZoneNumber + 1):
-            cases = [self.gridLib.getIdCell(i, j) for i in range(1, gridSize + 1) for j in
-                     range(1, gridSize + 1) if self.gridLib.getCellValueZone(i, j) == k]
+            cases = []
+            for i in range(1, gridSize + 1):
+                for j in range(1, gridSize + 1):
+                    if self.gridLib.getCellValueZone(i, j) == k:
+                        cases.append(self.gridLib.getIdCell(i, j))
             for case1, case2, case3 in itertools.combinations(cases,
                                                               3):  # permet d'avoir toutes les combinaisons possibles en enlevant les doublons
                 self.clauses.append([int(f"-{case1}"), int(f"-{case2}"), int(f"-{case3}")])
