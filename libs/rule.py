@@ -14,66 +14,67 @@ class Rule:
         self.gridLib = gridLib
 
     def __generateNeighborClauses(self):
-        def textClause(x, y, positive, *args):
+        def addClause(x, y, positive, *args):
             tempClauses = []
+            add = True
             prefix = "" if positive else "-"
             tempClauses.append(int(f"{prefix}{self.gridLib.getIdCell(x, y)}"))
             for arg in args:
                 prefix = "" if arg[2] else "-"
                 tempClauses.append(int(f"{prefix}{self.gridLib.getIdCell(arg[0], arg[1])}"))
-            return tempClauses
+            if add:
+                self.clauses.append(tempClauses)
 
         for i in range(1, self.n + 1):
             for j in range(1, self.n + 1):
                 if i == 1 and j == 1:  # case en haut a gauche x_{i-1,j} et x_{i,j-1} n'existent pas
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, True), (i + 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
+                    addClause(i, j, False, (i, j + 1, True), (i + 1, j, True))
+                    addClause(i, j, False, (i, j + 1, False), (i + 1, j, False))
 
                 elif i == 1 and j == self.n:  # case en haut à droite x_{i-1,j} et x_{i,j+1} n'existent pas
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i + 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
+                    addClause(i, j, False, (i, j - 1, True), (i + 1, j, True))
+                    addClause(i, j, False, (i, j - 1, False), (i + 1, j, False))
 
                 elif i == self.n and j == 1:  # case en bas a gauche x_{i+1,j} et x_{i,j-1} n'existent pas
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, True), (i - 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
+                    addClause(i, j, False, (i, j + 1, True), (i - 1, j, True))
+                    addClause(i, j, False, (i, j + 1, False), (i - 1, j, False))
 
                 elif i == self.n and j == self.n:  # case en bas à droite x_{i+1,j} et x_{i,j+1} n'existent pas
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i - 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
+                    addClause(i, j, False, (i, j - 1, True), (i - 1, j, True))
+                    addClause(i, j, False, (i, j - 1, False), (i - 1, j, False))
 
                 elif i == 1:  # cases sur la premiere ligne x_{i-1,j} n'existe pas
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i + 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
+                    addClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i + 1, j, True))
+                    addClause(i, j, False, (i, j - 1, False), (i, j + 1, False))
+                    addClause(i, j, False, (i, j - 1, False), (i + 1, j, False))
+                    addClause(i, j, False, (i, j + 1, False), (i + 1, j, False))
 
                 elif i == self.n:  # cases sur la derniere ligne x_{i+1,j} n'existe pas
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i - 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
+                    addClause(i, j, False, (i, j - 1, True), (i, j + 1, True), (i - 1, j, True))
+                    addClause(i, j, False, (i, j - 1, False), (i, j + 1, False))
+                    addClause(i, j, False, (i, j - 1, False), (i - 1, j, False))
+                    addClause(i, j, False, (i, j + 1, False), (i - 1, j, False))
 
                 elif j == 1:  # cases sur la premiere colonne x_{i, j_1} n'existe pas
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, True), (i, j + 1, True), (i - 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i, j + 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i - 1, j, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i - 1, j, False)))
+                    addClause(i, j, False, (i + 1, j, True), (i, j + 1, True), (i - 1, j, True))
+                    addClause(i, j, False, (i + 1, j, False), (i, j + 1, False))
+                    addClause(i, j, False, (i + 1, j, False), (i - 1, j, False))
+                    addClause(i, j, False, (i, j + 1, False), (i - 1, j, False))
 
                 elif j == self.n:  # cases sur la dernière colonne x_{i, j+1} n'existe pas
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, True), (i, j - 1, True), (i - 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i, j - 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i + 1, j, False), (i - 1, j, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i - 1, j, False)))
+                    addClause(i, j, False, (i + 1, j, True), (i, j - 1, True), (i - 1, j, True))
+                    addClause(i, j, False, (i + 1, j, False), (i, j - 1, False))
+                    addClause(i, j, False, (i + 1, j, False), (i - 1, j, False))
+                    addClause(i, j, False, (i, j - 1, False), (i - 1, j, False))
 
                 else:  # toutes les autres cases
-                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i, j - 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i, j + 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i - 1, j, False), (i + 1, j, False)))
-                    self.clauses.append(
-                        textClause(i, j, False, (i - 1, j, True), (i, j - 1, True), (i, j + 1, True), (i + 1, j, True)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i, j + 1, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j - 1, False), (i + 1, j, False)))
-                    self.clauses.append(textClause(i, j, False, (i, j + 1, False), (i + 1, j, False)))
+                    addClause(i, j, False, (i - 1, j, False), (i, j - 1, False))
+                    addClause(i, j, False, (i - 1, j, False), (i, j + 1, False))
+                    addClause(i, j, False, (i - 1, j, False), (i + 1, j, False))
+                    addClause(i, j, False, (i - 1, j, True), (i, j - 1, True), (i, j + 1, True), (i + 1, j, True))
+                    addClause(i, j, False, (i, j - 1, False), (i, j + 1, False))
+                    addClause(i, j, False, (i, j - 1, False), (i + 1, j, False))
+                    addClause(i, j, False, (i, j + 1, False), (i + 1, j, False))
 
         return self
 
@@ -136,5 +137,5 @@ class Rule:
 
     def resolve(self):
         self.__generateNeighborClauses()
-        self.__generateZoneClauses()
         self.__filterClauses()
+        self.__generateZoneClauses()
