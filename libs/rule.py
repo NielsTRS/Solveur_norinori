@@ -82,6 +82,33 @@ class Rule:
         gridSize = self.gridLib.getGridSize()
         gridZoneNumber = self.gridLib.getZoneNumber()
         for k in range(1, gridZoneNumber + 1):
+            casesInZone = []
+            for i in range(1, gridSize + 1):
+                for j in range(1, gridSize + 1):
+                    if self.gridLib.getCellValueZone(i, j) == k:
+                        casesInZone.append(self.gridLib.getIdCell(i, j))
+            n = len(casesInZone)
+            print(f"{n} cases de la zone {k} :  {casesInZone}")
+            combs = itertools.combinations(range(1, n + 1), n - 1)
+            for comb in combs:
+                temp = []
+                for id in comb:
+                    temp.append(int(f"{id}"))
+                self.clauses.append(temp)
+
+            combs = itertools.combinations(range(1, n + 1), 3)
+            for comb in combs:
+                temp = []
+                for id in comb:
+                    temp.append(int(f"-{id}"))
+                self.clauses.append(temp)
+            print(f"Clauses de la zone {k} : ")
+            print(self.getClauses())
+
+    def __generateZoneClauses1(self):
+        gridSize = self.gridLib.getGridSize()
+        gridZoneNumber = self.gridLib.getZoneNumber()
+        for k in range(1, gridZoneNumber + 1):
             cases = []
             for i in range(1, gridSize + 1):
                 for j in range(1, gridSize + 1):

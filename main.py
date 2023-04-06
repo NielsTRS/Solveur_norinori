@@ -15,17 +15,14 @@ def start():
     grille = grid.Grid(n, zone)
     regle = rule.Rule(n, grille)
 
-    grille.setCellValueColor(1, 1, 1)
-    grille.setCellValueColor(2, 1, 1)
-
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
-    print(grille.getGrid())
+    # print(grille.getGrid())
 
     regle.resolve()
 
-    print(regle.getClauses())
+    #print(regle.getClauses())
 
     regle.generateDimacs(name)
 
@@ -44,7 +41,6 @@ def start():
     if solution:
         model = solver.get_model()
         print('Satisfiable')
-        print('Solution:', model)
         for idCell in model:
             if idCell > 0:
                 print(f"Il faut colorier la case de coordonnées : {grille.getCellIJById(idCell)}")
@@ -52,7 +48,7 @@ def start():
         print('Non satisfiable')
 
 
-starttime = timeit.default_timer()
-print("The start time is :", starttime)
+# starttime = timeit.default_timer()
+# print("The start time is :", starttime)
 start()
-print("The time difference is :", timeit.default_timer() - starttime)
+# print("The time difference is :", timeit.default_timer() - starttime)
