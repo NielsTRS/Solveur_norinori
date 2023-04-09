@@ -8,8 +8,10 @@ from pysat.formula import CNF
 
 
 def start():
-    n = 8
-    zone = 3
+    starttime = timeit.default_timer()
+
+    n = 3
+    zone = 2
     name = "dimacs.cnf"
 
     grille = grid.Grid(n, zone)
@@ -19,8 +21,8 @@ def start():
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
-    grille.setCellValueZone(5, 1, 3)
-    grille.setCellValueZone(5, 2, 3)
+    #grille.setCellValueZone(5, 1, 3)
+    #grille.setCellValueZone(5, 2, 3)
 
     # Optional color configuration to add difficulty
     #grille.setCellValueColor(3, 3, grille.CELL_COLORED)
@@ -34,6 +36,8 @@ def start():
     # print(regle.getClauses())
 
     regle.generateDimacs(name)
+
+    print("Clauses time : ", timeit.default_timer() - starttime)
 
     # sat solver
     cnf = CNF(from_file=name)  # reading from file
@@ -56,8 +60,10 @@ def start():
     else:
         print('Non satisfiable')
 
+    print("Total time : ", timeit.default_timer() - starttime)
 
-starttime = timeit.default_timer()
-print("The start time is :", starttime)
+
+# starttime = timeit.default_timer()
+# print("The start time is :", starttime)
 start()
-print("The time difference is :", timeit.default_timer() - starttime)
+# print("The time difference is :", timeit.default_timer() - starttime)

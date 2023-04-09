@@ -110,6 +110,23 @@ class Grid:
         """
         return self.coloredCells
 
+    def getCellsInZone(self, size: int, zone: int):
+        """
+        Renvoie les identifiants des cases dans la zone passée en paramètre
+        :param size: taille de la grille
+        :type size: int
+        :param zone: numéro zone
+        :type zone: int
+        :return: cases dans zone
+        :rtype: list
+        """
+        casesInZone = []
+        for i in range(1, size + 1):
+            for j in range(1, size + 1):
+                if self.getCellValueZone(i, j) == zone:
+                    casesInZone.append(self.getIdCell(i, j))
+        return casesInZone
+
     def getCellValueZone(self, i: int, j: int):
         """
         Renvoie dans quelle zone est la cellule de coordonnées (i, j)

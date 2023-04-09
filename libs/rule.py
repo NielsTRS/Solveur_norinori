@@ -101,12 +101,10 @@ class Rule:
         gridSize = self.gridLib.getGridSize()
         gridZoneNumber = self.gridLib.getZoneNumber()
         for k in range(1, gridZoneNumber + 1):
-            casesInZone = []
-            for i in range(1, gridSize + 1):
-                for j in range(1, gridSize + 1):
-                    if self.gridLib.getCellValueZone(i, j) == k:
-                        casesInZone.append(self.gridLib.getIdCell(i, j))
+            casesInZone = self.gridLib.getCellsInZone(gridSize, k)
             n = len(casesInZone)
+            if n < 1:
+                raise AssertionError(f"Aucune case dans la zone {k}")
             combs = itertools.combinations(range(1, n + 1), n - 1)
             for comb in combs:
                 temp = []
@@ -130,18 +128,18 @@ class Rule:
         for clause in clauses:
             filtered_clause = []
             add_clause = True
-            for id in clause:
-                cell = self.gridLib.getCellIJById(abs(id))
-                color = self.gridLib.getCellValueColor(cell[0], cell[1])
-                if id > 0:
+            for idCell in clause:
+                coor = self.gridLib.getCellIJById(abs(idCell))
+                color = self.gridLib.getCellValueColor(coor[0], coor[1])
+                if idCell > 0:
                     if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(id)
+                        filtered_clause.append(idCell)
                     else:
                         add_clause = False
                         break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
                 else:
                     if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(id)
+                        filtered_clause.append(idCell)
             if add_clause:
                 filtered_clauses.append(filtered_clause)
 
