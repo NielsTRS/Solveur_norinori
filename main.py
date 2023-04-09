@@ -18,11 +18,11 @@ def start():
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
-    # print(grille.getGrid())
+    print(grille.getGrid())
 
     regle.resolve()
 
-    #print(regle.getClauses())
+    # print(regle.getClauses())
 
     regle.generateDimacs(name)
 
@@ -48,7 +48,7 @@ def start():
         print('Non satisfiable')
 
 
-# starttime = timeit.default_timer()
-# print("The start time is :", starttime)
+starttime = timeit.default_timer()
+print("The start time is :", starttime)
 start()
-# print("The time difference is :", timeit.default_timer() - starttime)
+print("The time difference is :", timeit.default_timer() - starttime)

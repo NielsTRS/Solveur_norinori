@@ -92,58 +92,20 @@ class Rule:
             combs = itertools.combinations(range(1, n + 1), n - 1)
             for comb in combs:
                 temp = []
-                for id in comb:
-                    temp.append(int(f"{id}"))
+                for j in comb:
+                    temp.append(int(f"{casesInZone[j - 1]}"))
                 self.clauses.append(temp)
 
             combs = itertools.combinations(range(1, n + 1), 3)
             for comb in combs:
                 temp = []
-                for id in comb:
-                    temp.append(int(f"-{id}"))
+                for j in comb:
+                    temp.append(int(f"-{casesInZone[j - 1]}"))
                 self.clauses.append(temp)
-            print(f"Clauses de la zone 1 à {k} : ")
-            print(self.getClauses())
-
-    def __generateZoneClauses1(self):
-        gridSize = self.gridLib.getGridSize()
-        gridZoneNumber = self.gridLib.getZoneNumber()
-        for k in range(1, gridZoneNumber + 1):
-            cases = []
-            for i in range(1, gridSize + 1):
-                for j in range(1, gridSize + 1):
-                    if self.gridLib.getCellValueZone(i, j) == k:
-                        cases.append(self.gridLib.getIdCell(i, j))
-            for case1, case2, case3 in itertools.combinations(cases,
-                                                              3):  # permet d'avoir toutes les combinaisons possibles en enlevant les doublons
-                self.clauses.append([int(f"-{case1}"), int(f"-{case2}"), int(f"-{case3}")])
-
-    def __filterClauses(self):
-        clauses = self.getClauses()
-        filtered_clauses = []
-        for clause in clauses:
-            filtered_clause = []
-            add_clause = True
-            for name in clause:
-                cell = self.gridLib.getCellIJById(abs(name))
-                color = self.gridLib.getCellValueColor(cell[0], cell[1])
-                if not str(name)[0] == "-":
-                    if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(name)
-                    else:
-                        add_clause = False
-                        break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
-                else:
-                    if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(name)
-            if add_clause:
-                filtered_clauses.append(filtered_clause)
-
-        self.clauses = filtered_clauses
-        return self
+        print(self.getClauses())
 
     def __getNumberVar(self):
-        return len(set([abs(name) for clause in self.getClauses() for name in clause]))  # transforme le tableau en 1D
+        return self.n * self.n
 
     def __getNumberClauses(self):
         return len(self.getClauses())
@@ -164,5 +126,4 @@ class Rule:
 
     def resolve(self):
         self.__generateNeighborClauses()
-        self.__filterClauses()
         self.__generateZoneClauses()
