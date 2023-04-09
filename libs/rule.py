@@ -104,6 +104,30 @@ class Rule:
                 self.clauses.append(temp)
         print(self.getClauses())
 
+    def __filterClauses(self):
+        clauses = self.getClauses()
+        filtered_clauses = []
+        for clause in clauses:
+            filtered_clause = []
+            add_clause = True
+            for name in clause:
+                cell = self.gridLib.getCellIJById(abs(name))
+                color = self.gridLib.getCellValueColor(cell[0], cell[1])
+                if not str(name)[0] == "-":
+                    if color != self.gridLib.CELL_COLORED:
+                        filtered_clause.append(name)
+                    else:
+                        add_clause = False
+                        break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
+                else:
+                    if color != self.gridLib.CELL_COLORED:
+                        filtered_clause.append(name)
+            if add_clause:
+                filtered_clauses.append(filtered_clause)
+
+        self.clauses = filtered_clauses
+        return self
+
     def __getNumberVar(self):
         return self.n * self.n
 
@@ -127,3 +151,5 @@ class Rule:
     def resolve(self):
         self.__generateNeighborClauses()
         self.__generateZoneClauses()
+        self.__filterClauses()
+

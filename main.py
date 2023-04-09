@@ -15,6 +15,8 @@ def start():
     grille = grid.Grid(n, zone)
     regle = rule.Rule(n, grille)
 
+    grille.setCellValueColor(3, 3, grille.CELL_COLORED)
+
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
