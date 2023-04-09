@@ -28,7 +28,7 @@ def solveGrid():
     n = int(data["gridSize"])
     zone = 1
     grille = grid.Grid(n, zone)
-    regle = rule.Rule(n, grille)
+    regle = rule.Rule(grille)
     cellsToColor = data["cellsToColor"]
     for cell in cellsToColor:
         grille.setCellValueColor(cell[0] + 1, cell[1] + 1, 1)

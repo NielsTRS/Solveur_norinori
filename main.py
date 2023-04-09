@@ -8,19 +8,26 @@ from pysat.formula import CNF
 
 
 def start():
-    n = 3
-    zone = 2
+    n = 8
+    zone = 3
     name = "dimacs.cnf"
 
     grille = grid.Grid(n, zone)
-    regle = rule.Rule(n, grille)
+    regle = rule.Rule(grille)
 
-    grille.setCellValueColor(3, 3, grille.CELL_COLORED)
-
+    # Zone configuration
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
-    print(grille.getGrid())
+    grille.setCellValueZone(5, 1, 3)
+    grille.setCellValueZone(5, 2, 3)
+
+    # Optional color configuration to add difficulty
+    #grille.setCellValueColor(3, 3, grille.CELL_COLORED)
+
+    #grille.setCellValueColor(5, 1, grille.CELL_COLORED)
+
+    # print(grille.getGrid())
 
     regle.resolve()
 

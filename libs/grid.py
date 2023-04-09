@@ -26,12 +26,16 @@ class Grid:
             raise AssertionError("Le nombre de zone doit être compris entre [1; inf(n²/2)]")
         self.n = n  # taille de la grille
         self.zone = zone  # nombre de zones
+        self.coloredCells = 0  # nombre de cases coloriées dans la configuration initiale
 
         # tableau d'indice [i][j] correspondant aux coordonnées de la case (i+1, j+1) avec les valeurs : [(1 coloriée, 0 sinon), zone de la case, id]
         self.cells = []
         self.__generateCells()
 
     def __generateCells(self):
+        """
+        Génère le tableau contenant les données de chaque case
+        """
         idCell = 1
         for i in range(self.n):
             subs = []
@@ -41,6 +45,15 @@ class Grid:
             self.cells.append(subs)
 
     def getIdCell(self, i: int, j: int):
+        """
+        Renvoie l'identifiant d'une case à partir de ses coordonnées
+        :param i: première coordonnée
+        :type i: int
+        :param j: deuxième coordonnée
+        :type j: int
+        :return: identifiant
+        :rtype: int
+        """
         if not (isinstance(i, int) and isinstance(j, int)):
             raise TypeError("Les coordonnées d'une case doivent être des entiers")
         if i > self.n or i <= Grid.GRID_MIN_INDEX or j > self.n or j <= Grid.GRID_MIN_INDEX:
@@ -48,6 +61,13 @@ class Grid:
         return self.cells[i - 1][j - 1][2]
 
     def getCellIJById(self, idCell: int):
+        """
+        Renvoie les coordonnées d'une case à partir de son identifiant
+        :param idCell: identifiant
+        :type idCell: int
+        :return: coordonnées
+        :rtype: list
+        """
         if not (isinstance(idCell, int)):
             raise TypeError("L'identifiant d'une case doit être un entier")
         if idCell > (self.n * self.n) or idCell <= 0:
@@ -56,7 +76,7 @@ class Grid:
             for j in range(self.n):
                 if self.cells[i][j][2] == idCell:
                     return [i + 1, j + 1]
-        return None
+        raise ValueError(f"Aucune case ne possède l'identifiant {idCell}")
 
     def getGrid(self):
         """
@@ -75,7 +95,20 @@ class Grid:
         return self.n
 
     def getZoneNumber(self):
+        """
+        Renvoie le nombre de zone
+        :return: nombre zone
+        :rtype: int
+        """
         return self.zone
+
+    def getNumberColoredCells(self):
+        """
+        Renvoie le nombre de cases coloriées (aide pour le calcul duu nombre de variables dans les clauses)
+        :return: nombre cases
+        :rtype: int
+        """
+        return self.coloredCells
 
     def getCellValueZone(self, i: int, j: int):
         """
@@ -128,8 +161,7 @@ class Grid:
             raise TypeError("Les coordonnées d'une case doivent être des entiers")
         if i > self.n or i <= Grid.GRID_MIN_INDEX or j > self.n or j <= Grid.GRID_MIN_INDEX:
             raise AssertionError("Les coordonnées ne sont pas dans la grille")
-        values = self.cells[i - 1][j - 1]
-        return values[0]
+        return self.cells[i - 1][j - 1][0]
 
     def setCellValueColor(self, i: int, j: int, color: int):
         """
@@ -140,8 +172,6 @@ class Grid:
         :type j: int
         :param color:
         :type color: int
-        :return: Renvoie lui-même
-        :rtype: Grid
         """
         if not (isinstance(i, int) and isinstance(j, int) and isinstance(color, int)):
             raise TypeError("Les paramètres pour définir une case coloriée doivent être des entiers")
@@ -149,5 +179,9 @@ class Grid:
             raise AssertionError("Les coordonnées ne sont pas dans la grille")
         if color != Grid.CELL_COLORED and color != Grid.CELL_NOT_COLORED:
             raise ValueError("Le paramètre de la couleur doit valoir 0 (non coloriée) ou 1 (coloriée)")
+        if color == Grid.CELL_COLORED:
+            self.coloredCells += 1
+        else:
+            if self.coloredCells > 0:
+                self.coloredCells -= 1
         self.cells[i - 1][j - 1][0] = color
-        return self
