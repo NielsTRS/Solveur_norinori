@@ -107,21 +107,19 @@ class Rule:
                     if self.gridLib.getCellValueZone(i, j) == k:
                         casesInZone.append(self.gridLib.getIdCell(i, j))
             n = len(casesInZone)
-            print(f"{n} cases de la zone {k} :  {casesInZone}")
             combs = itertools.combinations(range(1, n + 1), n - 1)
             for comb in combs:
                 temp = []
                 for j in comb:
-                    temp.append(int(f"{casesInZone[j - 1]}"))
+                    temp.append(casesInZone[j - 1])
                 self.clauses.append(temp)
 
             combs = itertools.combinations(range(1, n + 1), 3)
             for comb in combs:
                 temp = []
                 for j in comb:
-                    temp.append(int(f"-{casesInZone[j - 1]}"))
+                    temp.append(-casesInZone[j - 1])
                 self.clauses.append(temp)
-        print(self.getClauses())
 
     def __filterClauses(self):
         """
@@ -132,18 +130,18 @@ class Rule:
         for clause in clauses:
             filtered_clause = []
             add_clause = True
-            for name in clause:
-                cell = self.gridLib.getCellIJById(abs(name))
+            for id in clause:
+                cell = self.gridLib.getCellIJById(abs(id))
                 color = self.gridLib.getCellValueColor(cell[0], cell[1])
-                if not str(name)[0] == "-":
+                if id > 0:
                     if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(name)
+                        filtered_clause.append(id)
                     else:
                         add_clause = False
                         break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
                 else:
                     if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(name)
+                        filtered_clause.append(id)
             if add_clause:
                 filtered_clauses.append(filtered_clause)
 
