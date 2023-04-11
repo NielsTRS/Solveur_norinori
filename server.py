@@ -26,12 +26,16 @@ def solveGrid():
     name = "dimacs.cnf"
     data = request.get_json()
     n = int(data["gridSize"])
-    zone = 1
+    zone = int(data["amountAreas"])
     grille = grid.Grid(n, zone)
     regle = rule.Rule(grille)
     cellsToColor = data["cellsToColor"]
     for cell in cellsToColor:
         grille.setCellValueColor(cell[0] + 1, cell[1] + 1, 1)
+    cellsAreas = data["cellsAreas"]
+    for area in cellsAreas:
+        for cell in cellsAreas[area]:
+            grille.setCellValueZone(cell[0] + 1, cell[1] + 1, int(area))
     regle.resolve()
     regle.generateDimacs(name)
     cnf = CNF(from_file=name)  # reading from file

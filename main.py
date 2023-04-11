@@ -21,6 +21,7 @@ def start():
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
 
+
     #grille.setCellValueZone(5, 1, 3)
     #grille.setCellValueZone(5, 2, 3)
 
