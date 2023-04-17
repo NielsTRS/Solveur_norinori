@@ -17,6 +17,7 @@ class Rule:
         self.clauses = []
         self.gridLib = gridLib
         self.n = gridLib.getGridSize()
+        self.vars = self.n * self.n - self.gridLib.getNumberColoredCells()
 
     def __generateNeighborClauses(self):
         """
@@ -151,7 +152,7 @@ class Rule:
         :return: nombre identifiant
         :rtype: int
         """
-        return self.n * self.n - self.gridLib.getNumberColoredCells()
+        return self.vars
 
     def __getNumberClauses(self):
         """
@@ -185,6 +186,38 @@ class Rule:
         f.write(text)
         f.close()
 
+    def threeSatFormat(self):
+        maxvar = self.vars
+        clauses = self.getClauses()
+        new_clauses = list()
+        for clause in clauses:
+            if len(clause) > 3:
+                maxvar += 1  # variable supplémentaire
+                new_clauses.append([clause[0], clause[1], maxvar])
+                for i in range(2, len(clause) - 1):
+                    new_clause = []
+                    new_clause.append(-maxvar)
+                    new_clause.append(clause[i])
+                    maxvar += 1
+                    new_clause.append(maxvar)
+                    new_clauses.append(new_clause)
+            elif len(clause) == 2:
+                maxvar += 1  # variable supplémentaire
+                new_clauses.append([clause[0], clause[1], maxvar])
+                new_clauses.append([clause[0], clause[1], -maxvar])
+            elif len(clause) == 1:
+                maxvar += 2
+                y = maxvar - 1  # variable supplémentaire 1
+                z = maxvar  # variable supplémentaire 2
+                new_clauses.append([clause[0], y, z])
+                new_clauses.append([clause[0], y, -z])
+                new_clauses.append([clause[0], -y, z])
+                new_clauses.append([clause[0], -y, -z])
+            else:
+                new_clauses.append(clause)
+        self.clauses = new_clauses
+        self.vars = maxvar
+
     def resolve(self):
         """
         Lance un ensemble de fonctions permettant de résoudre le norinori
@@ -193,3 +226,4 @@ class Rule:
         self.__generateZoneClauses()
         if self.gridLib.getNumberColoredCells() > 0:
             self.__filterClauses()
+        self.threeSatFormat()

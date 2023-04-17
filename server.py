@@ -44,11 +44,15 @@ def solveGrid():
     solution = solver.solve()
     if solution:
         model = solver.get_model()
+        print(model)
         cellsToUpdate = []
         for id in model:
-            if id > 0:
+            if 0 < id < n * n + 1:
                 cellsToUpdate.append(grille.getCellIJById(id))
-        return jsonify({'solution': cellsToUpdate})
+        if len(cellsToUpdate) > 1:
+            return jsonify({'solution': cellsToUpdate})
+        else:
+            return jsonify({'error': True})
     else:
         return jsonify({'error': True})
 
