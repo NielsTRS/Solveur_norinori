@@ -49,7 +49,7 @@ def solveGrid():
         for id in model:
             if 0 < id < n * n + 1:
                 cellsToUpdate.append(grille.getCellIJById(id))
-        if len(cellsToUpdate) > 1:
+        if len(cellsToUpdate) > 0:
             return jsonify({'solution': cellsToUpdate})
         else:
             return jsonify({'error': True})

@@ -124,7 +124,7 @@ class Rule:
         """
         Permet de supprimer les clauses ayant un élément "vrai" lorsqu'une case est mise comme coloriée lors de la configuration initiale
         """
-        clauses = self.getClauses()
+        clauses = self.clauses
         filtered_clauses = []
         for clause in clauses:
             filtered_clause = []
@@ -187,6 +187,9 @@ class Rule:
         f.close()
 
     def threeSatFormat(self):
+        """
+        Permet de transformer les clauses de n-sat en 3-sat
+        """
         maxvar = self.vars
         clauses = self.getClauses()
         new_clauses = list()
