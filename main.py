@@ -27,7 +27,7 @@ def start():
 
     # grille.setCellValueColor(5, 1, grille.CELL_COLORED)
 
-    print(grille.getGrid())
+    # print(grille.getGrid())
 
     regle.resolve()
 

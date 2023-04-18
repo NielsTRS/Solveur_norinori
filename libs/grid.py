@@ -72,11 +72,8 @@ class Grid:
             raise TypeError("L'identifiant d'une case doit être un entier")
         if idCell > (self.n * self.n) or idCell <= 0:
             raise AssertionError("Mauvaise valeur de l'identifiant")
-        for i in range(self.n):
-            for j in range(self.n):
-                if self.cells[i][j][2] == idCell:
-                    return [i + 1, j + 1]
-        raise ValueError(f"Aucune case ne possède l'identifiant {idCell}")
+        return [(idCell - 1) // self.n + 1, (idCell - 1) % self.n + 1]
+
 
     def getGrid(self):
         """
