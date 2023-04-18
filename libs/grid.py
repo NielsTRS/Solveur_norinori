@@ -74,7 +74,6 @@ class Grid:
             raise AssertionError("Mauvaise valeur de l'identifiant")
         return [(idCell - 1) // self.n + 1, (idCell - 1) % self.n + 1]
 
-
     def getGrid(self):
         """
         Renvoie le tableau contenant toutes les cases ainsi que les informations associées
