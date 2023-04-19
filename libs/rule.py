@@ -124,23 +124,21 @@ class Rule:
         """
         Permet de supprimer les clauses ayant un élément "vrai" lorsqu'une case est mise comme coloriée lors de la configuration initiale
         """
-        clauses = self.clauses
+        clauses = self.getClauses()
         filtered_clauses = []
+        colored = self.gridLib.CELL_COLORED
         for clause in clauses:
             filtered_clause = []
             add_clause = True
             for idCell in clause:
                 coor = self.gridLib.getCellIJById(abs(idCell))
                 color = self.gridLib.getCellValueColor(coor[0], coor[1])
-                if idCell > 0:
-                    if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(idCell)
-                    else:
+                if color != colored:
+                    filtered_clause.append(idCell)
+                else:
+                    if idCell > 0:
                         add_clause = False
                         break  # on évite de boucler sur les autres terms alors qu'on ne pas garder la clause
-                else:
-                    if color != self.gridLib.CELL_COLORED:
-                        filtered_clause.append(idCell)
             if add_clause:
                 filtered_clauses.append(filtered_clause)
 
@@ -192,23 +190,25 @@ class Rule:
         """
         maxvar = self.vars
         clauses = self.getClauses()
-        new_clauses = list()
+        new_clauses = []
         for clause in clauses:
-            if len(clause) > 3:
+            size = len(clause)
+            if size > 3:
                 maxvar += 1  # variable supplémentaire
                 new_clauses.append([clause[0], clause[1], maxvar])
-                for i in range(2, len(clause) - 1):
+                for i in range(2, size - 2):
                     new_clause = []
                     new_clause.append(-maxvar)
                     new_clause.append(clause[i])
                     maxvar += 1
                     new_clause.append(maxvar)
                     new_clauses.append(new_clause)
-            elif len(clause) == 2:
+                new_clauses.append([-maxvar, clause[size - 2], clause[size - 1]])
+            elif size == 2:
                 maxvar += 1  # variable supplémentaire
                 new_clauses.append([clause[0], clause[1], maxvar])
                 new_clauses.append([clause[0], clause[1], -maxvar])
-            elif len(clause) == 1:
+            elif size == 1:
                 maxvar += 2
                 y = maxvar - 1  # variable supplémentaire 1
                 z = maxvar  # variable supplémentaire 2
