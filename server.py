@@ -8,6 +8,10 @@ from pysat.formula import CNF
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/checkConnection', methods=['GET'])
+def checkConnection():
+    return jsonify({'connected': True})
+
 
 @app.route('/generateGrid', methods=['POST'])
 def generateGrid():
