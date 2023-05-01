@@ -5,7 +5,7 @@ TERESE Niels
 SELME Kelyan
 
 ## Requis : 
-- itertool
+- itertools
 - Flask
 - pysat
 
