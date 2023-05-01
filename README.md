@@ -5,9 +5,9 @@ TERESE Niels
 SELME Kelyan
 
 ## Requis : 
-itertool
-Flask
-pysat
+- itertool
+- Flask
+- pysat
 
 ## Contenu du programme : 
 gui/ : contient l'interface graphique
