@@ -103,14 +103,17 @@ class Rule:
         gridZoneNumber = self.gridLib.getZoneNumber()
         for k in range(1, gridZoneNumber + 1):
             casesInZone = self.gridLib.getCellsInZone(gridSize, k)
+            
             n = len(casesInZone)
             if n < 1:
                 raise AssertionError(f"Aucune case dans la zone {k}")
             combs = itertools.combinations(range(1, n + 1), n - 1)
+            
             for comb in combs:
                 temp = []
                 for j in comb:
                     temp.append(casesInZone[j - 1])
+                
                 self.clauses.append(temp)
 
             combs = itertools.combinations(range(1, n + 1), 3)

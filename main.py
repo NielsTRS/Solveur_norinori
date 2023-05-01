@@ -10,35 +10,55 @@ from pysat.formula import CNF
 def start():
     starttime = timeit.default_timer()
 
-    n = 10
-    zone = 2
-    name = "dimacs.cnf"
+    n = 5  #taille de la grille
+    zone = 6  # nombre de zones
+    name = "dimacs.cnf" #fichier dimacs qui sera généré
 
     grille = grid.Grid(n, zone)
     regle = rule.Rule(grille)
 
     # Zone configuration
+
+    grille.setCellValueZone(2, 2, 1)
+    grille.setCellValueZone(3, 1, 1)
+    grille.setCellValueZone(3, 2, 1)
+    grille.setCellValueZone(3, 3, 1)
+    grille.setCellValueZone(4, 2, 1)
+    grille.setCellValueZone(4, 3, 1)
+
+
     grille.setCellValueZone(1, 1, 2)
     grille.setCellValueZone(1, 2, 2)
+    grille.setCellValueZone(2, 1, 2)
 
-    # grille.setCellValueZone(5, 1, 3)
-    # grille.setCellValueZone(5, 2, 3)
+    grille.setCellValueZone(1, 3, 3)
+    grille.setCellValueZone(1, 4, 3)
+    grille.setCellValueZone(2, 3, 3)
+    grille.setCellValueZone(2, 4, 3)
 
-    # Optional color configuration to add difficulty
-    grille.setCellValueColor(3, 3, grille.CELL_COLORED)
+    grille.setCellValueZone(1, 5, 4)
+    grille.setCellValueZone(2, 5, 4)
+    grille.setCellValueZone(3, 5, 4)
+    grille.setCellValueZone(4, 5, 4)
 
-    #grille.setCellValueColor(5, 1, grille.CELL_COLORED)
+    grille.setCellValueZone(3, 4, 5)
+    grille.setCellValueZone(4, 4, 5)
+    grille.setCellValueZone(5, 4, 5)
+    grille.setCellValueZone(5, 5, 5)
 
-    # print(grille.getGrid())
+    grille.setCellValueZone(4, 1, 6)
+    grille.setCellValueZone(5, 1, 6)
+    grille.setCellValueZone(5, 2, 6)
+    grille.setCellValueZone(5, 3, 6)
 
+    # Résolution
     regle.resolve()
-
-    # print(regle.getClauses())
 
     regle.generateDimacs(name)
 
 
     print("Time clauses generation :", timeit.default_timer() - starttime)
+
 
     # sat solver
     cnf = CNF(from_file=name)  # reading from file
@@ -66,6 +86,7 @@ def start():
         print('Non satisfiable')
 
     print("Total time : ", timeit.default_timer() - starttime)
+
 
 
 start()
